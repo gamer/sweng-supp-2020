@@ -1,4 +1,3 @@
-// username, week0, week1, week2, week3, month, all time
 let contributors = [];
 function getContributors() { return contributors;}
 async function heyo(){ 
@@ -6,15 +5,9 @@ async function heyo(){
     date.setDate(date.getDate()-7)
     console.log(date);
     var last7DaysTime = parseInt((date.getTime() / 1000).toFixed(0));
-    date.setDate(date.getDate()-7)
-    console.log(date);
-    var last14DaysTime = parseInt((date.getTime() / 1000).toFixed(0));
-    date.setDate(date.getDate()-7)
-    console.log(date);
-    var last21DaysTime = parseInt((date.getTime() / 1000).toFixed(0));
-    date.setDate(date.getDate()-7)
-    console.log(date);
-    var last28DaysTime = parseInt((date.getTime() / 1000).toFixed(0));
+    var last14DaysTime = last7DaysTime - (7*24*60*60)
+    var last21DaysTime = last14DaysTime - (7*24*60*60)
+    var last28DaysTime = last21DaysTime - (7*24*60*60)
 
     var response = await fetch("https://api.github.com/users/torvalds/repos");
     var repos = await response.json();
@@ -23,14 +16,13 @@ async function heyo(){
     
     for (const[i, repo] of repos.entries()) {
         repoNameArr[i] = repo.full_name
-        console.log(i, repo.full_name);
     }
     
 
     for (i = 0; i < repoNameArr.length;  i++) { 
-        console.log("current repo is:http://api.github.com/repos/" + repoNameArr[i] + "/stats/contributors");
+        console.log("checking :https://api.github.com/repos/" + repoNameArr[i] + "/stats/contributors");
 
-        response = await fetch("http://api.github.com/repos/" + repoNameArr[i] + "/stats/contributors"); //1+".json");
+        response = await fetch("https://api.github.com/repos/" + repoNameArr[i] + "/stats/contributors");
         var json = await response.json();
 
         for (const userActivity of json) {
@@ -93,5 +85,4 @@ async function heyo(){
             }
         }
     }
-    console.log(contributors);
 }
