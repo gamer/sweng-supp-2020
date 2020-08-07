@@ -1,3 +1,10 @@
+// username, week0, week1, week2, week3, month, all time
+let contributorsAdditions = [];
+let contributorsDeletions = [];
+let contributorsCommits = [];
+function getContributorsAdditions() { return contributorsAdditions}
+function getContributorsDeletions() { return contributorsDeletions}
+function getContributorsCommits() { return contributorsCommits}
 async function heyo(){ 
     var date = new Date();
     date.setDate(date.getDate()-7)
@@ -13,30 +20,26 @@ async function heyo(){
     console.log(date);
     var last28DaysTime = parseInt((date.getTime() / 1000).toFixed(0));
 
-    // var response = await fetch("https://api.github.com/users/torvalds/repos");
-    // var repos = await response.json();
-    // var repoNameArr = [];
+    var response = await fetch("https://api.github.com/users/torvalds/repos");
+    var repos = await response.json();
+    var repoNameArr = [];
     
     
-    // for (const[i, repo] of repos.entries()) {
-    //     repoNameArr[i] = repo.full_name
-    //     console.log(i, repo.full_name);
-    // }
+    for (const[i, repo] of repos.entries()) {
+        repoNameArr[i] = repo.full_name
+        console.log(i, repo.full_name);
+    }
     
-    // username, week0, week1, week2, week3, month, all time
-    let contributorsAdditions = [];
-    let contributorsDeletions = [];
-    let contributorsCommits = [];
-    //for (i = 0; i < repoNameArr.length;  i++) { 
-        //console.log("current repo is:http://api.github.com/repos/" + repoNameArr[i] + "/stats/contributors");
 
-        response = await fetch(1+".json");     //"http://api.github.com/repos/" + repoNameArr[i] + "/stats/contributors");
+    for (i = 0; i < repoNameArr.length;  i++) { 
+        console.log("current repo is:http://api.github.com/repos/" + repoNameArr[i] + "/stats/contributors");
+
+        response = await fetch("http://api.github.com/repos/" + repoNameArr[i] + "/stats/contributors"); //1+".json");
         var json = await response.json();
-        
+
         var j=0;
         for (const userActivity of json) {
             var login = userActivity.author.login;
-            console.log
             var weeks = userActivity.weeks;
             let contribAdd = [login,0,0,0,0,0,0];
             let contribDel = [login,0,0,0,0,0,0];
@@ -67,10 +70,11 @@ async function heyo(){
                 contribCom[5] = contribCom[1] + contribCom[2] + contribCom[3] + contribCom[4]
             }
             
-            contributorsAdditions[j] = contribAdd;
-            contributorsDeletions[j] = contribDel;
-            contributorsCommits[j] = contribCom;
+            contributorsAdditions[j] += contribAdd;
+            contributorsDeletions[j] += contribDel;
+            contributorsCommits[j] += contribCom;
             j++;
         }
-    //}
+    }
+
 }
