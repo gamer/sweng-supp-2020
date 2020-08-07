@@ -19,7 +19,7 @@ function barChart(contributors, range) {
         addRowsToDataTable(comData, "com" + range); 
         
         var addOptions = {
-            title: 'Contributor Additions (Past 28 Days)',
+            title: 'Contributor Additions',
             chartArea: {width: '50%'},
             fontSize:8,
             hAxis: {
@@ -31,7 +31,7 @@ function barChart(contributors, range) {
             }
         };
         var delOptions = {
-            title: 'Contributor Deletions (Past 28 Days)',
+            title: 'Contributor Deletions',
             chartArea: {width: '50%'},
             fontSize:8,
             hAxis: {
@@ -43,7 +43,7 @@ function barChart(contributors, range) {
             }
         };
         var comOptions = {
-            title: 'Contributor Commits (Past 28 Days)',
+            title: 'Contributor Commits',
             chartArea: {width: '50%'},
             fontSize:8,
             hAxis: {
