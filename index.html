@@ -7,18 +7,32 @@
     
 </head>
 <body>
-    <h1>Heyo1</h1>
+    <h2>Contributor Rankings</h2>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <div id="addchart_div"></div>
-    <div id="delchart_div"></div>
-    <div id="comchart_div"></div>
     <script type="text/javascript" src="index.js"></script>
     <script type="text/javascript" src="barchart.js"></script>
     <script>
         (async function() {
-            await heyo();
-            barChart(getContributors());
+            await getData();
+            barChart(getContributors(), "Month");
         })();
+        function updateGraph(range) {
+            barChart(getContributors(), range);
+        }
     </script>
+    <label for="cars">Time Range</label>
+    <select name="range" id="range" onchange="updateGraph(value);">
+        <option value="Month">Month</option>
+        <option value="Week">Week</option>
+        <option value="Total">All Time</option>
+    </select>
+    <div style="width: 100%; display: table;">
+        <div style="display: table-row">
+            <div id="addchart_div" style="width: 600px; display: table-cell;"></div>
+            <div id="delchart_div" style="display: table-cell;"></div>
+        </div>
+    </div>
+    <div id="comchart_div"></div>
+
 </body>
 </html>

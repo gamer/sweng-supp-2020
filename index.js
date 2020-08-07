@@ -1,6 +1,6 @@
 let contributors = [];
 function getContributors() { return contributors;}
-async function heyo(){ 
+async function getData(){ 
     var date = new Date();
     date.setDate(date.getDate()-7)
     console.log(date);
@@ -9,7 +9,8 @@ async function heyo(){
     var last21DaysTime = last14DaysTime - (7*24*60*60)
     var last28DaysTime = last21DaysTime - (7*24*60*60)
 
-    var response = await fetch("https://api.github.com/users/torvalds/repos");
+    
+    var response = await fetch("https://api.github.com/users/d3/repos");
     var repos = await response.json();
     var repoNameArr = [];
     

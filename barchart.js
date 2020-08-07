@@ -1,37 +1,22 @@
-
-
-function barChart(contributors) {
+function barChart(contributors, range) {
     google.charts.load('current', {packages: ['corechart', 'bar']});
-    google.charts.setOnLoadCallback(drawBasic);
-    
-    function drawBasic() {
-        function addRowsToDataTable(data,metric) {
-            let arr = [];
-            for (const [i, contributor] of contributors.entries()) {
-                if (contributor[metric] != 0) 
-                    arr[i] = [contributor.name, contributor[metric]];
-            }
-            arr = arr.sort(function(a,b) {
-                return b[1] - a[1];
-            });
-            console.log(arr);
+    google.charts.setOnLoadCallback(drawGraphs);
 
-            for(var i = 0; arr[i] != undefined && i < 10; i++) {
-                data.addRow(arr[i])
-            }
-        }
+    
+    function drawGraphs() {
+        console.log("Drawing Graphs...")
         var addData = new google.visualization.DataTable();
         var delData = new google.visualization.DataTable();
         var comData = new google.visualization.DataTable();
         addData.addColumn('string', 'Contributor');
         addData.addColumn('number', 'Additions');
-        addRowsToDataTable(addData, "addMonth"); 
+        addRowsToDataTable(addData, "add" + range); 
         delData.addColumn('string', 'Contributor');
         delData.addColumn('number', 'Deletions');
-        addRowsToDataTable(delData, "delMonth");
+        addRowsToDataTable(delData, "del" + range);
         comData.addColumn('string', 'Contributor');
         comData.addColumn('number', 'Commits');
-        addRowsToDataTable(comData, "comMonth"); 
+        addRowsToDataTable(comData, "com" + range); 
         
         var addOptions = {
             title: 'Contributor Additions (Past 28 Days)',
@@ -75,5 +60,21 @@ function barChart(contributors) {
         delChart.draw(delData, delOptions);
         var comChart = new google.visualization.BarChart(document.getElementById('comchart_div'));
         comChart.draw(comData, comOptions);
+
+        function addRowsToDataTable(data,metric) {
+            let arr = [];
+            for (const [i, contributor] of contributors.entries()) {
+                if (contributor[metric] != 0) 
+                    arr[i] = [contributor.name, contributor[metric]];
+            }
+
+            arr = arr.sort(function(a,b) {
+                return b[1] - a[1];
+            });
+
+            for(var i = 0; arr[i] != undefined && i < 10; i++) {
+                data.addRow(arr[i])
+            }
+        }
     }
 }
