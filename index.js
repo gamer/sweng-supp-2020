@@ -1,10 +1,6 @@
 // username, week0, week1, week2, week3, month, all time
-let contributorsAdditions = [];
-let contributorsDeletions = [];
-let contributorsCommits = [];
-function getContributorsAdditions() { return contributorsAdditions}
-function getContributorsDeletions() { return contributorsDeletions}
-function getContributorsCommits() { return contributorsCommits}
+let contributors = [];
+function getContributors() { return contributors;}
 async function heyo(){ 
     var date = new Date();
     date.setDate(date.getDate()-7)
@@ -37,44 +33,65 @@ async function heyo(){
         response = await fetch("http://api.github.com/repos/" + repoNameArr[i] + "/stats/contributors"); //1+".json");
         var json = await response.json();
 
-        var j=0;
         for (const userActivity of json) {
             var login = userActivity.author.login;
             var weeks = userActivity.weeks;
-            let contribAdd = [login,0,0,0,0,0,0];
-            let contribDel = [login,0,0,0,0,0,0];
-            let contribCom = [login,0,0,0,0,0,0];
-            for (var week of weeks) {
-                contribAdd[6] += week.a;
-                contribDel[6] += week.d;
-                contribCom[6] += week.c;
-                if (week.w > last7DaysTime) {
-                    contribAdd[1] += week.a;
-                    contribDel[1] += week.d;
-                    contribCom[1] += week.c;
-                } else if (week.w > last14DaysTime && week.w < last7DaysTime) {
-                    contribAdd[2] += week.a;
-                    contribDel[2] += week.d;
-                    contribCom[2] += week.c;
-                } else if (week.w > last21DaysTime && week.w < last14DaysTime) {
-                    contribAdd[3] += week.a;
-                    contribDel[3] += week.d;
-                    contribCom[3] += week.c;
-                } else if (week.w > last28DaysTime && week.w < last21DaysTime) {
-                    contribAdd[4] += week.a;
-                    contribDel[4] += week.d;
-                    contribCom[4] += week.c;
+            var user;
+            var index = contributors.findIndex(x => x.name === login);
+            if (index === -1) {
+                user = {
+                    name:login,
+                    addWeek1:0,
+                    addWeek2:0,
+                    addWeek3:0,
+                    addWeek4:0,
+                    addMonth:0,
+                    addTotal:0,
+                    
+                    delWeek1:0,
+                    delWeek2:0,
+                    delWeek3:0,
+                    delWeek4:0,
+                    delMonth:0,
+                    delTotal:0,
+                    
+                    comWeek1:0,
+                    comWeek2:0,
+                    comWeek3:0,
+                    comWeek4:0,
+                    comMonth:0,
+                    comTotal:0
                 }
-                contribAdd[5] = contribAdd[1] + contribAdd[2] + contribAdd[3] + contribAdd[4]
-                contribDel[5] = contribDel[1] + contribDel[2] + contribDel[3] + contribDel[4]
-                contribCom[5] = contribCom[1] + contribCom[2] + contribCom[3] + contribCom[4]
+                contributors.push(user);
+            } else {
+                user = contributors[index];
             }
-            
-            contributorsAdditions[j] += contribAdd;
-            contributorsDeletions[j] += contribDel;
-            contributorsCommits[j] += contribCom;
-            j++;
+            for (var week of weeks) {
+                user.addTotal += week.a;
+                user.delTotal += week.d;
+                user.comTotal += week.c;
+                if (week.w > last7DaysTime) {
+                    user.addWeek1 += week.a;
+                    user.delWeek1 += week.d;
+                    user.comWeek1 += week.c;
+                } else if (week.w > last14DaysTime && week.w < last7DaysTime) {
+                    user.addWeek2 += week.a;
+                    user.delWeek2 += week.d;
+                    user.comWeek2 += week.c;
+                } else if (week.w > last21DaysTime && week.w < last14DaysTime) {
+                    user.addWeek3 += week.a;
+                    user.delWeek3 += week.d;
+                    user.comWeek3 += week.c;
+                } else if (week.w > last28DaysTime && week.w < last21DaysTime) {
+                    user.addWeek4 += week.a;
+                    user.delWeek4 += week.d;
+                    user.comWeek4 += week.c;
+                }
+                user.addMonth = user.addWeek1 + user.addWeek2 + user.addWeek3 + user.addWeek4;
+                user.delMonth = user.delWeek1 + user.delWeek2 + user.delWeek3 + user.delWeek4;
+                user.comMonth = user.comWeek1 + user.comWeek2 + user.comWeek3 + user.comWeek4;
+            }
         }
     }
-
+    console.log(contributors);
 }
