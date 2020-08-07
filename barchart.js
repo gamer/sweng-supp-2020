@@ -5,40 +5,75 @@ function barChart(contributors) {
     google.charts.setOnLoadCallback(drawBasic);
     
     function drawBasic() {
-        function addRowsToDataTable() {
+        function addRowsToDataTable(data,metric) {
             let arr = [];
             for (const [i, contributor] of contributors.entries()) {
-                if (contributor.addMonth != 0) 
-                    arr[i] = [contributor.name, contributor.addMonth];
+                if (contributor[metric] != 0) 
+                    arr[i] = [contributor.name, contributor[metric]];
             }
             arr = arr.sort(function(a,b) {
                 return b[1] - a[1];
             });
             console.log(arr);
 
-            arr.forEach (function(value) {
-                data.addRow([value[0], value[1]]);
-            }); 
+            for(var i = 0; arr[i] != undefined && i < 10; i++) {
+                data.addRow(arr[i])
+            }
         }
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Contributor');
-        data.addColumn('number', 'Additions');
-        addRowsToDataTable(); 
-
-        var options = {
-        title: 'Contributor Additions (Past 28 Days)',
-        //chartArea: {width: '50%'},
-        hAxis: {
-            title: 'Lines of Code',
-            minValue: 0
-        },
-        vAxis: {
-            title: 'Contributor'
-        }
+        var addData = new google.visualization.DataTable();
+        var delData = new google.visualization.DataTable();
+        var comData = new google.visualization.DataTable();
+        addData.addColumn('string', 'Contributor');
+        addData.addColumn('number', 'Additions');
+        addRowsToDataTable(addData, "addMonth"); 
+        delData.addColumn('string', 'Contributor');
+        delData.addColumn('number', 'Deletions');
+        addRowsToDataTable(delData, "delMonth");
+        comData.addColumn('string', 'Contributor');
+        comData.addColumn('number', 'Commits');
+        addRowsToDataTable(comData, "comMonth"); 
+        
+        var addOptions = {
+            title: 'Contributor Additions (Past 28 Days)',
+            chartArea: {width: '50%'},
+            fontSize:8,
+            hAxis: {
+                title: 'Lines of Code',
+                minValue: 0
+            },
+            vAxis: {
+                title: 'Contributor'
+            }
         };
-
-        var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
-
-        chart.draw(data, options);
+        var delOptions = {
+            title: 'Contributor Deletions (Past 28 Days)',
+            chartArea: {width: '50%'},
+            fontSize:8,
+            hAxis: {
+                title: 'Lines of Code',
+                minValue: 0
+            },
+            vAxis: {
+                title: 'Contributor'
+            }
+        };
+        var comOptions = {
+            title: 'Contributor Commits (Past 28 Days)',
+            chartArea: {width: '50%'},
+            fontSize:8,
+            hAxis: {
+                title: 'Number of Commits',
+                minValue: 0
+            },
+            vAxis: {
+                title: 'Contributor'
+            }
+        };
+        var addChart = new google.visualization.BarChart(document.getElementById('addchart_div'));
+        addChart.draw(addData, addOptions);
+        var delChart = new google.visualization.BarChart(document.getElementById('delchart_div'));
+        delChart.draw(delData, delOptions);
+        var comChart = new google.visualization.BarChart(document.getElementById('comchart_div'));
+        comChart.draw(comData, comOptions);
     }
 }
